@@ -2,7 +2,10 @@ import { NgModule, Type } from '@angular/core';
 import { ParentService } from './abstract/parent.service';
 import { AlphaParentService } from './alpha/alpha-parent.service';
 import { BetaParentService } from './beta/beta-parent.service';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { ChildService } from './abstract/child.service';
+import { AlphaChildService } from './alpha/alpha-child.service';
+import { BetaChildService } from './beta/beta-child.service';
 
 export const GFX_ENGINE_QUERY_PARAM_KEY = 'gfx';
 
@@ -44,6 +47,12 @@ export function factoryForParentService(activatedRoute: ActivatedRoute) {
     BetaParentService);
 }
 
+export function factoryForChildService(activatedRoute: ActivatedRoute) {
+  return switchFactoryBasedOnGfxQueryParamOnOptions<ChildService>(activatedRoute,
+    AlphaChildService,
+    BetaChildService);
+}
+
 export function provideServiceBasedOnGfxQueryParam<T>(abstractService: any, alphaService: Type<T>, betaService: Type<T>, factory: any) {
   return {
     provide: abstractService,
@@ -65,6 +74,12 @@ export function provideServiceBasedOnGfxQueryParam<T>(abstractService: any, alph
       AlphaParentService,
       BetaParentService,
       factoryForParentService
+    ),
+    provideServiceBasedOnGfxQueryParam<ChildService>(
+      ChildService,
+      AlphaChildService,
+      BetaChildService,
+      factoryForChildService
     )
   ],
   bootstrap: []
