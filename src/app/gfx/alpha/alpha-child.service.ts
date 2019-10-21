@@ -4,6 +4,6 @@ import { ChildService } from '../abstract/child.service';
 @Injectable()
 export class AlphaChildService extends ChildService {
   create() {
-    return 'alpha-child-creation';
+    return 'alpha-child-creation' + this.id;
   }
 }
