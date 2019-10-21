@@ -1,4 +1,4 @@
-import { NgModule, Type } from '@angular/core';
+import { NgModule, StaticProvider, Type } from '@angular/core';
 import { ParentService } from './abstract/parent.service';
 import { AlphaParentService } from './alpha/alpha-parent.service';
 import { BetaParentService } from './beta/beta-parent.service';
@@ -63,25 +63,38 @@ export function provideServiceBasedOnGfxQueryParam<T>(abstractService: any, alph
   };
 }
 
+export const staticProviderForParentService = provideServiceBasedOnGfxQueryParam<ParentService>(
+  ParentService,
+  AlphaParentService,
+  BetaParentService,
+  factoryForParentService
+  );
+
+export const staticProviderForChildService = provideServiceBasedOnGfxQueryParam<ChildService>(
+  ChildService,
+  AlphaChildService,
+  BetaChildService,
+  factoryForChildService
+);
+
+export const staticProviderMap = new Map([
+  [ParentService, staticProviderForParentService],
+  [ChildService, staticProviderForChildService],
+]);
+
+// This will not work in prod mode
+// export const providers: StaticProvider[] = [...staticProviderMap.values()];
+export const providers = [
+  staticProviderForParentService,
+  staticProviderForChildService,
+];
+
 @NgModule({
   declarations: [
   ],
   imports: [
   ],
-  providers: [
-    provideServiceBasedOnGfxQueryParam<ParentService>(
-      ParentService,
-      AlphaParentService,
-      BetaParentService,
-      factoryForParentService
-    ),
-    provideServiceBasedOnGfxQueryParam<ChildService>(
-      ChildService,
-      AlphaChildService,
-      BetaChildService,
-      factoryForChildService
-    )
-  ],
+  providers,
   bootstrap: []
 })
 export class GfxModule { }
