@@ -3,7 +3,6 @@ import { ParentService } from '../gfx/abstract/parent.service';
 import { NotUsedService } from '../gfx/abstract/not-used.service';
 import { BetaNotUsedService } from '../gfx/beta/beta-not-used.service';
 import { AlphaNotUsedService } from '../gfx/alpha/alpha-not-used.service';
-import { GFX_INJECTOR } from '../gfx/gfx.module';
 import { ChildService } from '../gfx/abstract/child.service';
 
 @Component({
@@ -14,15 +13,12 @@ import { ChildService } from '../gfx/abstract/child.service';
 export class HomeComponent implements OnInit {
 
   constructor(public parentService: ParentService) {
-    parentService.childService = GFX_INJECTOR.get(ChildService);
+    // parentService.childService = GFX_INJECTOR.get(ChildService);
 
-    // This will create new instances!
-    const secondChildService = GFX_INJECTOR.get(ChildService);
     this.debug({
       notUsedService: NotUsedService,
       alphaNotUsedService: AlphaNotUsedService,
       betaNotUsedService: BetaNotUsedService,
-      secondChildService,
     });
   }
 
