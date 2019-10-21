@@ -5,9 +5,7 @@ import { ChildService } from '../gfx/abstract/child.service';
 import { NotUsedService } from '../gfx/abstract/not-used.service';
 import { BetaNotUsedService } from '../gfx/beta/beta-not-used.service';
 import { AlphaNotUsedService } from '../gfx/alpha/alpha-not-used.service';
-import { factoryForChildService, provideServiceBasedOnGfxQueryParam } from '../gfx/gfx.module';
-import { AlphaChildService } from '../gfx/alpha/alpha-child.service';
-import { BetaChildService } from '../gfx/beta/beta-child.service';
+import { staticProviderMap } from '../gfx/gfx.module';
 
 @Component({
   selector: 'app-home',
@@ -16,18 +14,12 @@ import { BetaChildService } from '../gfx/beta/beta-child.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public activatedRoute: ActivatedRoute,
-              public parentService: ParentService,
+  constructor(public parentService: ParentService,
               public injector: Injector) {
     const customInjector = Injector.create({
       providers: [
-        {provide: ActivatedRoute, useValue: activatedRoute},
-        provideServiceBasedOnGfxQueryParam<ChildService>(
-          ChildService,
-          AlphaChildService,
-          BetaChildService,
-          factoryForChildService
-        )
+        {provide: ActivatedRoute, useValue: injector.get(ActivatedRoute)},
+        staticProviderMap.get(ChildService),
       ]});
     const childService = customInjector.get(ChildService);
     parentService.childService = childService;
